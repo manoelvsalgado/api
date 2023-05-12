@@ -4,23 +4,20 @@ const { response } = require("express");
 
 class NotesController{
   async create(request, response){
+<<<<<<< HEAD
     const { title, description, tags, links } = request.body;
     const user_id = request.user.id;
+=======
+    const { title, description, rating, tags } = request.body;
+    const { user_id } = request.params;
+>>>>>>> f7c80e41a54daecbb122dd6dfe863b4d9fd3d7c3
 
     const [note_id] = await knex("notes").insert({
       title,
       description,
+      rating,
       user_id
     });
-
-    const linksInsert = links.map(link => {
-      return {
-        note_id,
-        url: link
-      }
-    });
-
-    await knex("links").insert(linksInsert);
 
     const tagsInsert = tags.map(name => {
       return {
@@ -40,12 +37,10 @@ class NotesController{
 
     const note = await knex("notes").where({ id }).first();
     const tags = await knex("tags").where({ note_id: id }).orderBy("name");
-    const links = await knex("links").where({ note_id: id }).orderBy("created_at");
     
     return response.json({
       ...note,
-      tags,
-      links
+      tags
     });
   }
 
